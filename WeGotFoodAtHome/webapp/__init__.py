@@ -10,7 +10,7 @@ def create_app():
     app = Flask(__name__, static_url_path='/static')
  
     
-    app.config["SECRET_KEY"] = "helloworld"
+    app.config["SECRET_KEY"] = #secret key
    
     
 
