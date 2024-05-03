@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>We Got Food At Home!</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet"  href="/static/login.css">
+</head>
+<body>
+<div class="container" id="container">
+	<div class="form-container sign-up-container">
+		<form id="signup_form" action="/user_registration" method="post">
+			<div><h1>Create Account</h1></div>
+			<input type="text" name="fname" placeholder="First Name" />
+			<input type="email" name="email" placeholder="Email" />
+			<input type="password" name="password1" placeholder="Password" />
+			<input type="password" name="password2" placeholder="Confirm Password" />
+			<button id="sign_up_button">Sign Up</button>
+		</form>
+	</div>
+	<div class="form-container sign-in-container">
+		<form id="signin_form" action="/user_authentication" method="post">
+			<div><h1>Sign In</h1></div>
+			<input type="email" name="email" placeholder="Email" />
+			<input type="password" name="password" placeholder="Password" />
+			<a href="/forgot_password">Forgot your password?</a>
+			<button id="sign_in_button">Sign In</button>
+		</form>
+	</div>
+	<div class="overlay-container">
+		<div class="overlay">
+			<div class="overlay-panel overlay-left">
+				<h1>Welcome Back Chef!</h1>
+				<p>Whats on the menu today? Sign in below.</p>
+				<button class="ghost" id="signIn">Sign In</button>
+			</div>
+			<div class="overlay-panel overlay-right">
+				<h1>Hungry?</h1>
+				<p><image id="chef_with_pizza" img src="/static/chef_with_pizza.png">We Got Food At Home!</p>
+				<button class="ghost" id="signUp">Sign Up</button>
+			</div>
+		</div>
+	</div>
+	<p hidden id="initial_display">{{display}}</p>
+	<span id="alert" hidden>{{alert}}</span>
+</div>
+<script>
+    const signUpButton = document.getElementById('signUp');
+    const signInButton = document.getElementById('signIn');
+    const container = document.getElementById('container');
+	const initial_display = document.getElementById("initial_display").textContent;
+	
+	document.addEventListener('DOMContentLoaded', function() {
+
+		const alert_message= document.getElementById("alert").textContent;
+        if (alert_message =="") {
+            //pass
+        } else {
+            alert(alert_message);
+        }
+
+		if (initial_display=="sign_in") {
+			container.classList.remove("right-panel-active");
+		} else if (initial_display=="sign_up") {
+			container.classList.add("right-panel-active");
+		}
+	});
+	
+
+    signUpButton.addEventListener('click', () => {
+        container.classList.add("right-panel-active");
+    });
+
+    signInButton.addEventListener('click', () => {
+        container.classList.remove("right-panel-active");
+    });
+
+	document.addEventListener('DOMContentLoaded', function () {
+            // Get the form and button elements
+            var form = document.getElementById('signin_form');
+            var button = document.getElementById('sign_in_button');
+
+            // Add click event listener to the button
+            button.addEventListener('click', function () {
+                // Submit the form
+                form.submit();
+            });
+        });
+
+	document.addEventListener('DOMContentLoaded', function () {
+		// Get the form and button elements
+		var form = document.getElementById('signup_form');
+		var button = document.getElementById('sign_up_button');
+
+		// Add click event listener to the button
+		button.addEventListener('click', function () {
+			// Submit the form
+			form.submit();
+		});
+	});
+</script>
+</body>
+</html>

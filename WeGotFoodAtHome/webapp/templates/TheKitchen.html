@@ -1,0 +1,400 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>We Got Food At Home!</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="/static/main.css" />
+</head>
+<body class="right-sidebar is-preload">
+<div id="page-wrapper">
+
+    <!-- Header -->
+    <section id="header">
+
+        <!-- Logo -->
+        <h1><a href="index.html">The Kitchen</a></h1>
+        <!-- Nav -->
+        <nav id="nav">
+            <ul>
+                <li><a href="/">Sign out</a></li>
+            </ul>
+        </nav>
+
+    </section>
+
+    <!-- Main -->
+    <section id="main">
+        <div class="container">
+            <div class="row">
+                <div class="col-8 col-12-medium">
+                    <!--Filters for search-->
+                    <button id="makeitperfect" onclick="toggleSection()">Make it Perfect</button>
+                    <section id="hiddenSection1">
+                        <h2>What's the vibes...</h2>
+                        <p>Optionally further describe the type of meal you're craving right now.</p>
+                        <!-- Your content here -->
+                        <div class="button-row" id="row1">
+                            <div class="button" id="row1_button1" onclick="toggleButton(1, 1)">Breakfast</div>
+                            <div class="button" id="row1_button2" onclick="toggleButton(1, 2)">Lunch</div>
+                            <div class="button" id="row1_button3" onclick="toggleButton(1, 3)">Dinner</div>
+                        </div>
+                        <div class="button-row" id="row1">
+                            <div class="button" id="row1_button4" onclick="toggleButton(1, 4)">Snack</div>
+                            <div class="button" id="row1_button5" onclick="toggleButton(1, 5)">Teatime</div>
+                            <div class="button" id="row1_button6" onclick="toggleButton(1, 6)">Dessert</div>
+                        </div>
+                        
+                        <form id="submitButtonInputs" action="/thekitchen/turn_on_theheat" method="POST">
+                            <input type="hidden" id="row1_value" name="row1_value" value="">
+                            <input type="hidden" id="selectedOption" name="selectedOption" value="">
+                            <input type="hidden" id="items-input" name="items-input" value="">
+                            <br>
+                            <input type="text" id="carbs" name="Maxcarbs" placeholder="Max Amount of Carbs (g)"><br>
+                            <input type="text" id="carbs" name="Mincarbs" placeholder="Min Amount of Carbs (g)"><br>
+                            <input type="text" id="protein" name="Maxprotein" placeholder="Max Amount of Protein (g)"><br>
+                            <input type="text" id="protein" name="Minprotein" placeholder="Min Amount of Protein (g)"><br>
+                            <input type="text" id="fat" name="Maxfat" placeholder="Max Amount of Fat (g)"><br>
+                            <input type="text" id="fat" name="Minfat" placeholder="Min Amount of Fat (g)"><br>
+                            <input type="text" id="sugar" name="Maxsugar" placeholder="Max Amount of Sugar (g)"><br>
+                            <input type="text" id="sugar" name="Minsugar" placeholder="Min Amount of Sugar (g)"><br>
+                            <input type="text" id="calories" name="Maxcalories" placeholder="Max Amount of Calories"><br>
+                            <input type="text" id="calories" name="Mincalories" placeholder="Min Amount of Calories">
+                        </form>
+                    </section>
+
+                    <!-- Result -->
+                    <section class="recipe_title">
+                        <h3 id="food_title">{{food_title}}</h3>
+                        <div>
+                            <img class="food-image" src={{food_img}}>
+                        </div>
+                    </section>
+                    <section id={{display_result}} >
+                        <!-- Your content here -->
+                        <header>
+                            <div>Recipe Matches: {{recipe_cnt}}/{{total_recipes}}</div>
+                            <h3 class="recipe_output">Ingredients</h3>
+                        </header>
+                        <section>
+                                <form class="checkbox-wrapper-13" action="/thekitchen/save_missing_ingredient" method="POST">
+                                        {% for item in food_ingredients %}
+                                            <input type="checkbox" id="c1-13" name="missing_food_item" value="{{item}}"/>
+                                            <label id="custom_label" for="c1-13" class="check-box">{{item}}</label><br>
+                                        {% endfor %}
+                                        <div>
+                                            <input type="text" placeholder="Add additional missing ingredients" id="miss_ing_txt_box" name="missing_food_item">
+                                            <p id="prompt_to_user_1">Let us know which ingredients you do not have avaliable</p>
+                                            <input id="ingredient_save" type="submit" value="Save">
+                                        </div>
+                                </form>
+                        </section>
+                        <section>
+                            <header>
+                                <a id="recipe_url" href="{{recipe_url}}" rel="noreferrer noopener" target="_blank">Recipe Instructions</a>
+                            </header>
+                        </section>
+                        <section class="output_buttons">
+                            <form id="update_shoplist" action="/newRecipe" method="POST">
+                                <button id="new_recipe_button" type="submit">New Recipe</button>
+                            </form>
+                        </section>
+                    </section>
+                </div>
+                
+                <div class="col-4 col-12-medium">
+                    <!-- Sidebar -->
+                    <section class="box">
+                        <header>
+                            <header>
+                                <form id="addItemForm">
+                                    <div class="dropdown">
+                                        <span><h3>Cuisine Type<img src="/static/downarrow.png"  width="15" height="15" class="dropbtn"></h3></span>
+                                        <div class="dropdown-content">
+                                            <a href="#" onclick="setOption('American')">American</a>
+                                            <a href="#" onclick="setOption('Asian')">Asian</a>
+                                            <a href="#" onclick="setOption('British')">British</a>
+                                            <a href="#" onclick="setOption('Caribbean')">Caribbean</a>
+                                            <a href="#" onclick="setOption('Central Europe')">Central Europe</a>
+                                            <a href="#" onclick="setOption('Chinese')">Chinese</a>
+                                            <a href="#" onclick="setOption('Eastern Europe')">Eastern Europe</a>
+                                            <a href="#" onclick="setOption('French')">French</a>
+                                            <a href="#" onclick="setOption('Indian')">Indian</a>
+                                            <a href="#" onclick="setOption('Italian')">Italian</a>
+                                            <a href="#" onclick="setOption('Japanese')">Japanese</a>
+                                            <a href="#" onclick="setOption('Kosher')">Kosher</a>
+                                            <a href="#" onclick="setOption('Mediterranean')">Mediterranean</a>
+                                            <a href="#" onclick="setOption('Mexican')">Mexican</a>
+                                            <a href="#" onclick="setOption('Middle Eastern')">Middle Eastern</a>
+                                            <a href="#" onclick="setOption('Nordic')">Nordic</a>
+                                            <a href="#" onclick="setOption('South American')">South American</a>
+                                            <a href="#" onclick="setOption('South East Asian')">South East Asian</a>
+                                        </div>
+                                    </div>
+                                    <input type="hidden" id="selectedOption" name="selectedOption">
+                                </form>
+                                <p><span id="selectedOptionDisplay"></span></p>
+                                <p></p>
+                                <p></p>
+                                <span>
+                                    <h4>Specify Ingredients</h4>
+                                    <input type="text" id="input-field" placeholder="Enter item">
+                                    <button id="add-btn" type="button">Add</button>
+                                    <div id="list-container">
+                                        <ul id="item-list"></ul>
+                                    </div>
+                                </span>
+                            </header>
+                        </header>
+                        <p>Enter the main components for your dish.</p>
+                        <button id="letscookbutton" onclick="submitForms()";>Let's Cook!</button>
+                    </section>
+                    <div class="col-4 col-12-medium">
+                        <!-- Sidebar -->
+                        <section id="{{missing_ing_lst_display}}" class="box">
+                            <ul id="unique-item-list">
+                                <span>
+                                    <header>
+                                        <h2>{{fname}}'s <br>Shopping List</h2>
+                                    </header>
+                                    {% for item in missing_ing_items %}
+                                        <li>{{item}}<span class="delete">&#10060;</span></li>                       
+                                    {% endfor %}
+                                </span>
+                              </ul>
+                            <p>These are the ingredients missing in your kitchen. <br> We will avoid recipes that require them.</p>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <section id="footer">
+        <div class="container">                                                                                 
+            <div class="col-4 col-12-medium">
+                <section>
+                    <header>
+                    </header>
+                </section>
+            </div>
+            <div class="col-12">
+                <!-- Copyright -->
+                <div id="copyright">
+                    <ul class="links">
+                        <p>&copy; 2024 TasteMate. All rights reserved.</p>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+    <span id="alert" hidden>{{alert}}</span>
+</div>
+
+<!--Adding additional items-->
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const alert_message= document.getElementById("alert").textContent;
+        if (alert_message =="") {
+            //pass
+        } else {
+            alert(alert_message);
+        }
+
+        const inputField = document.getElementById("input-field");
+        const addButton = document.getElementById("add-btn");
+        const itemList = document.getElementById("item-list");
+        const itemsInput = document.getElementById("items-input");
+        const itemsArray = [];
+
+        function addItem() {
+            const inputValue = inputField.value.trim();
+            if (inputValue !== "") {
+                itemsArray.push(inputValue);
+                renderItems();
+                inputField.value = "";
+                updateItemsInput();
+            }
+        }
+
+        function deleteItem(index) {
+            itemsArray.splice(index, 1);
+            renderItems();
+            updateItemsInput();
+        }
+
+        function renderItems() {
+            itemList.innerHTML = "";
+            itemsArray.forEach((item, index) => {
+                const listItem = document.createElement("li");
+                listItem.textContent = item;
+                listItem.classList.add("list-item");
+
+                const deleteButton = document.createElement("button");
+                deleteButton.textContent = "❌";
+                deleteButton.classList.add("delete-button");
+                deleteButton.addEventListener("click", () => {
+                    deleteItem(index);
+                });
+
+                listItem.appendChild(deleteButton);
+                itemList.appendChild(listItem);
+            });
+        }
+
+        function updateItemsInput() {
+            itemsInput.value = itemsArray.join(',');
+        }
+
+        addButton.addEventListener("click", addItem);
+
+        inputField.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                addItem();
+            }
+        });
+
+        document.getElementById("addItemForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+        });
+
+        document.getElementById("letscookbutton").addEventListener("click", function(event) {
+            submitForms();
+        });
+    });
+</script>
+
+<!--returning toggled button-->
+<script>
+    let activeButtons = {1: null, 2: null};
+
+    function toggleButton(row, button) {
+        const buttonId = `row${row}_button${button}`;
+        const isActive = document.getElementById(buttonId).classList.toggle('active');
+
+        if (isActive) {
+            if (activeButtons[row]) {
+                document.getElementById(activeButtons[row]).classList.remove('active');
+            }
+            activeButtons[row] = buttonId;
+        } else {
+            activeButtons[row] = null;
+        }
+
+        document.getElementById(`row${row}_value`).value = isActive ? `Button ${button}` : "";
+    }
+</script>
+
+<!--Choose your protein-->
+<script>
+    function setOption(option) {
+        document.getElementById('selectedOption').value = option;
+        document.getElementById('selectedOptionDisplay').innerText = option;
+    }
+</script>
+
+<!--Make it perfect dropdown-->
+<script>
+    function toggleSection() {
+        var section = document.getElementById("hiddenSection1");
+        // Toggle max-height to reveal or hide the section
+        if (section.style.maxHeight) {
+            section.style.maxHeight = null;
+        } else {
+            section.style.maxHeight = section.scrollHeight + "px";
+        }
+    }
+</script>
+
+<!--Recipe Result Dropdown-->
+<script>
+    function toggleSection2() {
+        var section = document.getElementById("mySection");
+        if (section.style.display === "none" || section.style.display === "") {
+            section.style.display = "block";
+        }
+    }
+</script>
+
+
+<!-- Script to submit all forms -->
+<script>
+    function submitForms() {
+        document.getElementById("submitButtonInputs").submit();
+    }
+</script>
+
+<!--Updating Missing Ingredients Section-->
+<script>
+    // Function to handle item deletion
+    function deleteItem(event) {
+      // Get the parent <li> element of the clicked delete button
+      var listItem = event.target.parentElement;
+      // Remove the <li> element from the list
+      listItem.remove();
+    }
+  
+    // Add event listener to all delete buttons
+    var deleteButtons = document.querySelectorAll('.delete');
+    deleteButtons.forEach(function(button) {
+      button.addEventListener('click', deleteItem);
+    });
+  </script>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!--Sending updated shopping List to server-->
+<!--Sending updated shopping List to server-->
+<script>
+    $(document).ready(function() {
+        // Function to update the hidden input with the current list content
+        function updateListContent() {
+            // Get the ul element with the ID 'unique-item-list'
+            const itemList = document.getElementById('unique-item-list');
+            // Check if the list element exists
+            if (itemList) {
+                // Get all list items within the list
+                const listItems = itemList.getElementsByTagName('li');
+                // Initialize an empty FormData object
+                const formData = new FormData();
+
+                // Loop through each list item and append its text content to the FormData object
+                for (let i = 0; i < listItems.length; i++) {
+                    formData.append('items[]', listItems[i].textContent);
+                }
+
+                // AJAX POST request
+                $.ajax({
+                    type: "POST",
+                    url: "/thekitchen/missing_ingredient", // Endpoint on Flask server
+                    data: formData, // Send FormData object
+                    contentType: false, // Let jQuery handle content type
+                    processData: false, // Prevent jQuery from processing data
+                    success: function(response) {
+                        console.log("List sent successfully!");
+                        console.log(response); // Log the response from the server
+                    },
+                    error: function(errMsg) {
+                        console.error("Error sending list:", errMsg);
+                    }
+                });
+            } else {
+                console.error("List element with ID 'unique-item-list' not found.");
+            }
+        }
+
+        // Initial update of the list content
+        updateListContent();
+
+        // Add event listener for changes in the list (e.g., item added or removed)
+        document.getElementById('unique-item-list').addEventListener('DOMSubtreeModified', function() {
+            // Update the list content when the list structure changes
+            updateListContent();
+        });
+    });
+</script>
+
+
+
+</body>
+</html>
